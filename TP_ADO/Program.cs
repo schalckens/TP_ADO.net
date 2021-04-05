@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using Oracle.ManagedDataAccess.Client;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,20 +12,48 @@ namespace ClientCommande
     {
         static void Main()
         {
-            string host = "10.10.2.10";
-            int port = 1521;
-            string id = "slam";
+            string host = "freesio.lyc-bonaparte.fr";
+            int port = 21521;
+            string sid = "slam";
             string login = "schalckensado";
             string pwd = "sio";
             try
             {
-
+                string cs = String.Format("Data Source= " + "(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = {0})(PORT = {1}))" +"(CONNECT_DATA = (SERVICE_NAME = {2}))); User Id = {3}; Password = {4};", host, port, sid , login, pwd);
+                OracleConnection cnOracle = new OracleConnection(cs);
+                cnOracle.Open();
+                Console.WriteLine("Connecté Oracle");
+                cnOracle.Close();
+                Console.WriteLine("Déconnecté Oracle");
             }
-            catch (Exception)
+
+            catch (OracleException ex)
             {
 
-                Console.WriteLine();
+                Console.WriteLine("Erreur Oracle " + ex.Message);
             }
+
+            string hostMysql = "127.0.0.1";
+            int portMysql = 3306;
+            string baseMysql = "dbadonet";
+            string uidMysql = "emploueado";
+            string pwdMysql = "employeado";
+            try
+            {
+                string csMysql = String.Format("Server = {0}; Port = {1}; Database = {2}; " + "Uid = {3}; " + "Pwd = {4}", hostMysql, portMysql, baseMysql, uidMysql, pwdMysql);
+                MySqlConnection cnMysql = new MySqlConnection(csMysql);
+                cnMysql.Open();
+                Console.WriteLine("connecté Mysql");
+                cnMysql.Close();
+                Console.WriteLine("déconnecté Mysql");
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine("Erreur Mysql " + ex.Message);
+            }
+
+
+            Console.ReadKey();
         }
     }
 }
