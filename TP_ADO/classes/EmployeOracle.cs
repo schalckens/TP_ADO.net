@@ -14,7 +14,7 @@ namespace EmployeDatas.Oracle
         private string db;
         private string login;
         private string pwd;
-        OracleConnection connexionAdo;
+        private OracleConnection connexionAdo;
 
         public EmployeOracle(string host, int port, string db, string login, string pwd)
         {
@@ -23,10 +23,10 @@ namespace EmployeDatas.Oracle
             this.db = db;
             this.login = login;
             this.pwd = pwd;
-            string cs = String.Format("Data Source= " + "(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = {0})(PORT = {1}))" + "(CONNECT_DATA = (SERVICE_NAME = {2}))); User Id = {3}; Password = {4};", host, port, db, login, pwd);
+            string cs = String.Format("Data Source= " + "(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = {0})(PORT = {1}))" + "(CONNECT_DATA = (SERVICE_NAME = {2}))); User Id = {3}; Password = {4};", this.host, this.port, this.db, this.login, this.pwd);
             try
             {
-                OracleConnection connexionAdo = new OracleConnection(cs);
+                this.connexionAdo = new OracleConnection(cs);
             }
             catch (OracleException ex)
             {
@@ -36,26 +36,44 @@ namespace EmployeDatas.Oracle
         }
         public void Ouvrir()
         {
-            this.connexionAdo.Open();
+            try
+            {
+                connexionAdo.Open();
+                Console.WriteLine("connection ok");
+            }
+            catch (OracleException ex)
+            {
+
+                Console.WriteLine(ex.Message);
+            }
+            
         }
         public void Fermer()
         {
-            this.connexionAdo.Close();
+            try
+            {
+                connexionAdo.Close();
+            }
+            catch (OracleException ex)
+            {
+
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public void AfficherTousLesCours() 
         {
-            string requete = "select * from cours";
+            string requete = "select codecours, libellecours, nbjours from cours";
             try
             {
                 OracleCommand cmdOracle = new OracleCommand(requete, this.connexionAdo);
                 OracleDataReader reader = cmdOracle.ExecuteReader();
                 while (reader.Read())
                 {
-                    string affichage = "Code : " + reader.
-                    Console.WriteLine();
+                    string affichage = "Code : " + reader.GetString(0) + " Libelle : " + reader.GetString(1) + " NbJours : " + reader.GetInt32(2);
+
+                    Console.WriteLine(affichage);
                 }
-                reader.Close();
             }
             catch (OracleException ex)
             {
@@ -71,6 +89,5 @@ namespace EmployeDatas.Oracle
         {
 
         }
-        public 
     }
 }

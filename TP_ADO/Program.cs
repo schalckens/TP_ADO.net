@@ -17,7 +17,9 @@ namespace ClientCommande
             {
                 EmployeOracle empOracle = new EmployeOracle(host, port, sid, login, pwd);
                 empOracle.Ouvrir();
-                empOracle.AfficherTousLesCours();
+                //empOracle.AfficherTousLesCours();
+                empOracle.Fermer();
+                Console.WriteLine("connecxion terminé");
             }
 
             catch (OracleException ex)
