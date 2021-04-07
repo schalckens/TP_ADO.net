@@ -18,8 +18,14 @@ namespace ClientCommande
                 EmployeOracle empOracle = new EmployeOracle(host, port, sid, login, pwd);
                 empOracle.Ouvrir();
                 //empOracle.AfficherTousLesCours();
+                empOracle.AfficherNbProjets();
+                //empOracle.AfficherSalaireMoyenParProjet();
+                //empOracle.AfficherEmployesSalaire(10000);
+                //empOracle.InsereCours("BR099", "Apprentissage JDBC", 4);
+                //empOracle.SupprimeCours("BR099");
+                //empOracle.AfficherSalaireEmploye(13);
+                //empOracle.AugmenterSalaire(2, "PR2");
                 empOracle.Fermer();
-                Console.WriteLine("connecxion terminé");
             }
 
             catch (OracleException ex)
