@@ -162,7 +162,7 @@ namespace EmployeDatas.Oracle
                 OracleDataReader reader = cmdOracle.ExecuteReader();
                 while (reader.Read())
                 {
-                    string affichage = "Numéro Emp : " + reader.GetInt32(0) + "Nom Emp :" + reader.GetString(1) + "Prenom Emp :" + reader.GetString(2) + "Salaire Emp : " + reader.GetInt32(3);
+                    string affichage = "Numéro Emp : " + reader.GetInt32(0) + " Nom Emp : " + reader.GetString(1) + " Prenom Emp : " + reader.GetString(2) + " Salaire Emp : " + reader.GetInt32(3);
 
                     Console.WriteLine(affichage);
                 }
@@ -182,7 +182,7 @@ namespace EmployeDatas.Oracle
                 OracleDataReader reader = cmdOracle.ExecuteReader();
                 while (reader.Read())
                 {
-                    string affichage = "Numéro Emp : " + reader.GetInt32(0) + " Nom Emp :" + reader.GetString(1) + " Prenom Emp :" + reader.GetString(2) + " Salaire Emp : " + reader.GetInt32(3);
+                    string affichage = " Numéro Emp : " + reader.GetInt32(0) + " Nom Emp : " + reader.GetString(1) + " Prenom Emp : " + reader.GetString(2) + " Salaire Emp : " + reader.GetInt32(3);
 
                     Console.WriteLine(affichage);
                 }
@@ -195,10 +195,16 @@ namespace EmployeDatas.Oracle
         }
         public void InsereCours(string codecours,string libelleCours,int nbJours)
         {
-            string requete = "INSERT INTO cours(codecours,libellecours,nbjours) VALUES ("+codecours+","+libelleCours+","+Convert.ToString(nbJours)+");";
+            string requete = "INSERT INTO cours(codecours,libellecours,nbjours) VALUES ("+codecours+", "+libelleCours+", :nbjours);";
             try
             {
                 OracleCommand cmdOracle = new OracleCommand(requete, this.connexionAdo);
+                //cmdOracle.Parameters.Add(new OracleParameter("codecours", OracleDbType.Varchar2));
+                //cmdOracle.Parameters["codecours"].Value = codecours;
+                //cmdOracle.Parameters.Add(new OracleParameter("libellecours", OracleDbType.Varchar2));
+                //cmdOracle.Parameters["libellecours"].Value = libelleCours;
+                cmdOracle.Parameters.Add(new OracleParameter("nbjours", OracleDbType.Int16));
+                cmdOracle.Parameters["nbjours"].Value = nbJours;
                 cmdOracle.ExecuteNonQuery();
                 Console.WriteLine("Ligne insérée");
             }
