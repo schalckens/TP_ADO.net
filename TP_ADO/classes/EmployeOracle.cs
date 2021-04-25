@@ -195,14 +195,14 @@ namespace EmployeDatas.Oracle
         }
         public void InsereCours(string codecours,string libelleCours,int nbJours)
         {
-            string requete = "INSERT INTO cours(codecours,libellecours,nbjours) VALUES ("+codecours+", "+libelleCours+", :nbjours);";
+            string requete = "INSERT INTO cours(codecours,libellecours,nbjours) VALUES ( :codecours, :libellecours, :nbjours)";
             try
             {
                 OracleCommand cmdOracle = new OracleCommand(requete, this.connexionAdo);
-                //cmdOracle.Parameters.Add(new OracleParameter("codecours", OracleDbType.Varchar2));
-                //cmdOracle.Parameters["codecours"].Value = codecours;
-                //cmdOracle.Parameters.Add(new OracleParameter("libellecours", OracleDbType.Varchar2));
-                //cmdOracle.Parameters["libellecours"].Value = libelleCours;
+                cmdOracle.Parameters.Add(new OracleParameter("codecours", OracleDbType.Varchar2));
+                cmdOracle.Parameters["codecours"].Value = codecours;
+                cmdOracle.Parameters.Add(new OracleParameter("libellecours", OracleDbType.Varchar2));
+                cmdOracle.Parameters["libellecours"].Value = libelleCours;
                 cmdOracle.Parameters.Add(new OracleParameter("nbjours", OracleDbType.Int16));
                 cmdOracle.Parameters["nbjours"].Value = nbJours;
                 cmdOracle.ExecuteNonQuery();
@@ -216,10 +216,12 @@ namespace EmployeDatas.Oracle
         }
         public void SupprimeCours(string codecours)
         {
-            string requete = "DELETE FROM cours WHERE codecours = "+codecours;
+            string requete = "DELETE FROM cours WHERE codecours = :codecours";
             try
             {
                 OracleCommand cmdOracle = new OracleCommand(requete, this.connexionAdo);
+                cmdOracle.Parameters.Add(new OracleParameter("codecours", OracleDbType.Varchar2));
+                cmdOracle.Parameters["codecours"].Value = codecours;
                 cmdOracle.ExecuteNonQuery();
                 Console.WriteLine("Ligne supprimée");
             }

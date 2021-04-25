@@ -48,8 +48,10 @@ namespace ClientCommande
                 cnMysql.Ouvrir();
                 //cnMysql.AfficherTousLesEmployes(); //21 lignes
                 //cnMysql.AfficherNbSeminaire(); //19 lignes
-                cnMysql.AfficherNbInscritsParCours(); //5 lignes
-                cnMysql.AugmenterSalaireCurseur();
+                //cnMysql.AfficherNbInscritsParCours(); //5 lignes
+                //cnMysql.AugmenterSalaireCurseur(); //erreur connexion deja ouverte ??
+                //cnMysql.AfficherProjetNbEmployes(3);
+                cnMysql.SeminairesPosterieurs();
                 cnMysql.Fermer();
 
                 Console.WriteLine("--- Fin normal du Program ---");

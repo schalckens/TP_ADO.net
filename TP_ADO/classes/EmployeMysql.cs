@@ -136,7 +136,46 @@ namespace EmployeDatas.Mysql
                 throw new Exception("Erreur à la méthode AugmenterSalaireCurseur");
             }
         }
-        public void AfficherProjetNbEmployes() { }
+        public void AfficherProjetNbEmployes(int nb) 
+        {
+            string requete = @"select codeprojet from employe where codeprojet is not null group by codeprojet having count(*) > " + nb;
+            try
+            {
+                MySqlCommand cmdMySql = new MySqlCommand(requete, this.connexionAdo);
+                var reader = cmdMySql.ExecuteReader();
+                while (reader.Read())
+                {
+                    string affichage = reader.GetString(0);
+                    Console.WriteLine(affichage);
+                }
+                reader.Close();
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        public void SeminairesPosterieurs()
+        {
+            string requete = @"select dateinscrit from inscrit where dateinscrit < STR_TO_DATE( '15/12/2019' , '%d%m%Y') ";
+            try
+            {
+                MySqlCommand cmdMySql = new MySqlCommand(requete, this.connexionAdo);
+                //cmdMySql.Parameters.AddWithValue("@date",date);
+                var reader = cmdMySql.ExecuteReader();
+                while (reader.Read())
+                {
+                    string affichage = reader.GetString(0);
+                    Console.WriteLine(affichage);
+                }
+                reader.Close();
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+        }
         public void InsereProjet() { }
         public void SupprimeSeminaire() { }
         public void RajouterNbJoursCours() { }
