@@ -138,10 +138,11 @@ namespace EmployeDatas.Mysql
         }
         public void AfficherProjetNbEmployes(int nb) 
         {
-            string requete = @"select codeprojet from employe where codeprojet is not null group by codeprojet having count(*) > " + nb;
+            string requete = @"select codeprojet from employe where codeprojet is not null group by codeprojet having count(*) > @nb";
             try
             {
                 MySqlCommand cmdMySql = new MySqlCommand(requete, this.connexionAdo);
+                cmdMySql.Parameters.AddWithValue("@nb", nb);
                 var reader = cmdMySql.ExecuteReader();
                 while (reader.Read())
                 {
@@ -155,13 +156,13 @@ namespace EmployeDatas.Mysql
                 Console.WriteLine(ex.Message);
             }
         }
-        public void SeminairesPosterieurs()
+        public void SeminairesPosterieurs(string date)
         {
-            string requete = @"select dateinscrit from inscrit where dateinscrit < STR_TO_DATE( '15/12/2019' , '%d%m%Y') ";
+            string requete = @"select dateinscrit from inscrit where dateinscrit < STR_TO_DATE( '@date' , '%d%m%Y')";
             try
             {
                 MySqlCommand cmdMySql = new MySqlCommand(requete, this.connexionAdo);
-                //cmdMySql.Parameters.AddWithValue("@date",date);
+                cmdMySql.Parameters.AddWithValue("@date",date);
                 var reader = cmdMySql.ExecuteReader();
                 while (reader.Read())
                 {
@@ -176,8 +177,41 @@ namespace EmployeDatas.Mysql
             }
 
         }
-        public void InsereProjet() { }
-        public void SupprimeSeminaire() { }
-        public void RajouterNbJoursCours() { }
+        public void InsereProjet(string codeProj, string nomProj, string dateDeb, string dateFin, string nomContact) 
+        {
+            string requete = @"insert into projet(codeprojet,nomprojet,debutproj,finprevue,nomcontact) values (@codeprojet, @nomprojet , @debutproj , @finprevue,@nomcontact);";
+            try
+            {
+                MySqlCommand cmdMySql = new MySqlCommand(requete, this.connexionAdo);
+                cmdMySql.Parameters.AddWithValue("@codeprojet", codeProj);
+                cmdMySql.Parameters.AddWithValue("@nomprojett", nomProj);
+                cmdMySql.Parameters.AddWithValue("@debutproj", dateDeb);
+                cmdMySql.Parameters.AddWithValue("@finprevue", dateFin);
+                cmdMySql.Parameters.AddWithValue("@nomcontact", nomContact);
+                cmdMySql.ExecuteNonQuery();
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        public void SupprimeSeminaire(string codeProj) 
+        {
+            string requete = @"delete from projet where codeprojet = @codeProj;";
+            try
+            {
+                MySqlCommand cmdMySql = new MySqlCommand(requete, this.connexionAdo);
+                cmdMySql.Parameters.AddWithValue("@codeprojet", codeProj);
+                cmdMySql.ExecuteNonQuery();
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        public void RajouterNbJoursCours(string jours) 
+        { 
+
+        }
     }
 }

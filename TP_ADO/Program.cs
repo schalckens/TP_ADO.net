@@ -23,7 +23,8 @@ namespace ClientCommande
             //    //empOracle.AfficherNbProjets(); //5 lignes
             //    //empOracle.AfficherSalaireMoyenParProjet(); //6 lignes
             //    //empOracle.AfficherEmployesSalaire(10000); //4 lignes
-            //    //empOracle.InsereCours("BR099", "Apprentissage JDBC", 4); //missing comma ou invalid character
+            //    //empOracle.AugmenterSalaireCurseur();
+            //    //empOracle.InsereCours("BR099", "Apprentissage JDBC", 4);
             //    //empOracle.SupprimeCours("BR099");
             //    //empOracle.AfficherSalaireEmploye(13); //1 lignes
             //    //empOracle.AugmenterSalaire(2, "PR2"); //5 lignes
@@ -51,7 +52,9 @@ namespace ClientCommande
                 //cnMysql.AfficherNbInscritsParCours(); //5 lignes
                 //cnMysql.AugmenterSalaireCurseur(); //erreur connexion deja ouverte ??
                 //cnMysql.AfficherProjetNbEmployes(3);
-                cnMysql.SeminairesPosterieurs();
+                //cnMysql.SeminairesPosterieurs("2021-12-15");
+                cnMysql.InsereProjet("PR8", "TOTO", "2020-05-12", "2020-06-12", "Schalckens Valentine");
+
                 cnMysql.Fermer();
 
                 Console.WriteLine("--- Fin normal du Program ---");
