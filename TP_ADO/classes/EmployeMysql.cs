@@ -121,7 +121,7 @@ namespace EmployeDatas.Mysql
                     string sqlUpdate = @"update employe set salaire=salaire*1.03 where numemp= @numemp";
                     MySqlCommand cmdUpdate = new MySqlCommand(sqlUpdate, this.connexionAdo);
                     cmdUpdate.Parameters.AddWithValue("@numemp", reader.GetValue(0));
-                    cmdUpdate.ExecuteNonQuery();
+                    cmdUpdate.ExecuteReaderAsync();
                     nbMaj++;
                 }
                 transMySql.Commit();
@@ -157,7 +157,7 @@ namespace EmployeDatas.Mysql
         }
         public void SeminairesPosterieurs(string date)
         {
-            string requete = @"select dateinscrit from inscrit where dateinscrit < STR_TO_DATE( '@date' , '%d%m%Y')";
+            string requete = @"select numemp,codesemi from inscrit where dateinscrit < STR_TO_DATE( '@date' , '%d%m%Y')";
             try
             {
                 MySqlCommand cmdMySql = new MySqlCommand(requete, this.connexionAdo);
@@ -165,7 +165,7 @@ namespace EmployeDatas.Mysql
                 var reader = cmdMySql.ExecuteReader();
                 while (reader.Read())
                 {
-                    string affichage = reader.GetString(0);
+                    string affichage = "Num emp : "+reader.GetString(0)+ " code semi : " + reader.GetString(0);
                     Console.WriteLine(affichage);
                 }
                 reader.Close();

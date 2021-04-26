@@ -255,5 +255,6 @@ namespace EmployeDatas.Oracle
                 Console.WriteLine(ex.Message);
             }
         }
+
     }
 }
