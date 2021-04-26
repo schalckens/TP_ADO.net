@@ -175,10 +175,12 @@ namespace EmployeDatas.Oracle
         }
         public void AfficherSalaireEmploye(int numemp)
         {
-            string requete = "select numemp,nomemp,prenomemp,salaire from employe where numemp = " + Convert.ToString(numemp);
+            string requete = "select numemp,nomemp,prenomemp,salaire from employe where numemp = :numemp";
             try
             {
                 OracleCommand cmdOracle = new OracleCommand(requete, this.connexionAdo);
+                cmdOracle.Parameters.Add(new OracleParameter("numemp", OracleDbType.Int16));
+                cmdOracle.Parameters["numemp"].Value = numemp;
                 OracleDataReader reader = cmdOracle.ExecuteReader();
                 while (reader.Read())
                 {
