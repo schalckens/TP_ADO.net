@@ -234,6 +234,7 @@ namespace EmployeDatas.Oracle
         public void AugmenterSalaire(int pourcentage, string projet)
         {
             string requete = "select numemp, nomemp, prenomemp, salaire + ((salaire*"+Convert.ToString(pourcentage)+")/100) as newsalaire, codeprojet from employe where codeprojet = '"+ projet +"'";
+            int cpt = 0;
             try
             {
                 OracleCommand cmdOracle = new OracleCommand(requete, this.connexionAdo);
@@ -241,9 +242,10 @@ namespace EmployeDatas.Oracle
                 while (reader.Read())
                 {
                     string affichage = "Num Emp : " + reader.GetString(0) + " Nom Emp : " + reader.GetString(1) + " Prenom Emp :"+reader.GetString(2) + " Salaire : "+reader.GetString(3) + " Projet : " + reader.GetString(4) ;
-
+                    cpt++;
                     Console.WriteLine(affichage);
                 }
+                Console.WriteLine("Il y a "+cpt+" ligne mises à jours");
             }
             catch (OracleException ex)
             {

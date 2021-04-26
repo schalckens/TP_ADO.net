@@ -118,10 +118,9 @@ namespace EmployeDatas.Mysql
                 int nbMaj = 0;
                 while (reader.Read())
                 {
-                    string sqlUpdate = @"update employe set salaire=salaire*1.03 where numemp= :numemp";
+                    string sqlUpdate = @"update employe set salaire=salaire*1.03 where numemp= @numemp";
                     MySqlCommand cmdUpdate = new MySqlCommand(sqlUpdate, this.connexionAdo);
-                    cmdUpdate.Parameters.Add(new MySqlParameter("numemp", MySqlDbType.Int16));
-                    cmdUpdate.Parameters[0].Value = reader.GetValue(0);
+                    cmdUpdate.Parameters.AddWithValue("@numemp", reader.GetValue(0));
                     cmdUpdate.ExecuteNonQuery();
                     nbMaj++;
                 }
@@ -197,21 +196,42 @@ namespace EmployeDatas.Mysql
         }
         public void SupprimeSeminaire(string codeProj) 
         {
-            string requete = @"delete from projet where codeprojet = @codeProj;";
+            string requete = @"delete from projet where codeprojet = @codeprojet";
             try
             {
                 MySqlCommand cmdMySql = new MySqlCommand(requete, this.connexionAdo);
                 cmdMySql.Parameters.AddWithValue("@codeprojet", codeProj);
                 cmdMySql.ExecuteNonQuery();
+                Console.WriteLine("ligne supprimée");
             }
             catch (MySqlException ex)
             {
                 Console.WriteLine(ex.Message);
             }
         }
-        public void RajouterNbJoursCours(string jours) 
-        { 
+        public void RajouterNbJoursCours(int jourMin,int nbJours) 
+        {
+            string requete = "select codecours, nbjours+@nbjr as newjr from cours where nbjours < @jourm";
+            int cpt = 0;
+            try
+            {
+                MySqlCommand cmdMySql = new MySqlCommand(requete, this.connexionAdo);
+                cmdMySql.Parameters.AddWithValue("@nbjr", nbJours);
+                cmdMySql.Parameters.AddWithValue("@jourm", jourMin);
+                MySqlDataReader reader = cmdMySql.ExecuteReader();
+                while (reader.Read())
+                {
+                    string affichage = "Code du Cours : " + reader.GetString(0) + " Nouveau nombre de jours: " + reader.GetString(1);
+                    cpt++;
+                    Console.WriteLine(affichage);
+                }
+                Console.WriteLine("Il y a " + cpt + " ligne mises à jour");
+            }
+            catch (MySqlException ex)
+            {
 
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

@@ -51,9 +51,11 @@ namespace ClientCommande
                 //cnMysql.AfficherNbSeminaire(); //19 lignes
                 //cnMysql.AfficherNbInscritsParCours(); //5 lignes
                 //cnMysql.AugmenterSalaireCurseur(); //erreur connexion deja ouverte ??
-                //cnMysql.AfficherProjetNbEmployes(3);
-                //cnMysql.SeminairesPosterieurs("2021-12-15");
-                cnMysql.InsereProjet("PR8", "TOTO", "2020-05-12", "2020-06-12", "Schalckens Valentine");
+                //cnMysql.AfficherProjetNbEmployes(3);//ok
+                //cnMysql.SeminairesPosterieurs("2021-12-15"); //erreur 
+                //cnMysql.InsereProjet("PR8", "TOTO", "2020-05-12", "2020-06-12", "Schalckens Valentine"); //erreur
+                //cnMysql.SupprimeSeminaire("BR0350216"); //ok
+                //cnMysql.RajouterNbJoursCours(3, 1); //1 lignes ok
 
                 cnMysql.Fermer();
 
