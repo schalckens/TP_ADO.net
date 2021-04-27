@@ -63,5 +63,42 @@ namespace EmployeDatas.Oracle
             }
         }
 
+        public void InsereCategorie(string categorie)
+        {
+            string requete = "insert into categorie(id,categorie) values (seq_categorie.nextval,:categorie);";
+            string requeteId = "select seq_categorie.currval from dual;";
+            try
+            {
+                OracleCommand cmdOracle = new OracleCommand(requete, this.connexionAdo);
+                OracleCommand cmdId = new OracleCommand(requeteId, this.connexionAdo);
+                cmdOracle.Parameters.Add("categorie", OracleDbType.Varchar2, System.Data.ParameterDirection.Input);
+                cmdOracle.Parameters["categorie"].Value = categorie;
+                cmdOracle.ExecuteNonQuery();
+                var id = cmdId.ExecuteScalar();
+                Console.WriteLine("Une ligne a été insérée dans catégorie et son Id est : "+id);
+            }
+            catch (OracleException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        public void InsereCategorieV2(string categorie)
+        {
+            string requete = "insert into categorie(id,categorie) values (seq_categorie.nextval,:categorie) returning id into :increment;";
+            try
+            {
+                OracleCommand cmdOracle = new OracleCommand(requete, this.connexionAdo);
+                cmdOracle.Parameters.Add("categorie", OracleDbType.Varchar2, System.Data.ParameterDirection.Input);
+                cmdOracle.Parameters.Add("increment", OracleDbType.Int16, System.Data.ParameterDirection.Output);
+
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
     }
 }
