@@ -52,5 +52,25 @@ namespace EmployeDatas.Mysql
             }
             
         }
+        public void InserCategorie(string categorie)
+        {
+            string requete = @"insert into categorie(libelle) values (@categ);";
+            string requeteId = @"select last_insert_id() from categorie;";
+            try
+            {
+                MySqlCommand cmdMySql = new MySqlCommand(requete,this.connexionAdo);
+                MySqlCommand cmdId = new MySqlCommand(requeteId, this.connexionAdo);
+                cmdMySql.Parameters.AddWithValue("categ", categorie);
+                cmdMySql.ExecuteNonQuery();
+                var increment = cmdMySql.LastInsertedId;
+                var incrementv2 = cmdId.ExecuteScalar();
+                Console.WriteLine("Il y a une catégorie inséré et son identifiant est : "+increment);
+                Console.WriteLine("derniere id v2 : " + incrementv2);
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
     }
 }
