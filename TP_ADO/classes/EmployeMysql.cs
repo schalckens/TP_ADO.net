@@ -72,5 +72,46 @@ namespace EmployeDatas.Mysql
                 Console.WriteLine(ex.Message);
             }
         }
+        public void InsereCategarieCours(List<String> parametres)
+        {
+            MySqlCommand cmdMySqlUne;
+            MySqlCommand cmdMySqlDeux;
+            MySqlTransaction transMySql = this.connexionAdo.BeginTransaction();
+            string requeteUne = @"insert into categorie (libelle) values (@categ);";
+            string requeteDeux = @"insert into cours (codecours, libellecours, nbjours, idcategorie) values (@codecours, @libellecours,@nbjours, @idcategfk);";
+            try
+            {
+                cmdMySqlUne = new MySqlCommand(requeteUne, this.connexionAdo);
+                cmdMySqlDeux = new MySqlCommand(requeteDeux, this.connexionAdo);
+                //parametre de la première requete
+                cmdMySqlUne.Parameters.AddWithValue("@categ", parametres[0]);
+                var increment = cmdMySqlUne.LastInsertedId;
+
+                //parametre de la seconde requete
+                cmdMySqlDeux.Parameters.AddWithValue("@idcategfk", increment);
+                for (int i = 1; i < parametres.Count; i++)
+                {
+                    String[] tablo = parametres[i].Split(';');
+
+                    cmdMySqlDeux.Parameters.AddWithValue("@codecours",tablo[0]);
+                    cmdMySqlDeux.Parameters.AddWithValue("@libellecours",tablo[1]);
+                    cmdMySqlDeux.Parameters.AddWithValue("@nbjours", tablo[2]);
+                    MySqlDataReader reader = cmdMySqlDeux.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        string affichage = "cours : " + reader.GetString(0) + " libelle : " + reader.GetString(1) + " durée : " + reader.GetInt16(2) + " jours  categorie : " + reader.GetInt16(3);
+                        Console.WriteLine(affichage);
+                    }
+                    reader.Close();
+                }
+                transMySql.Commit();
+
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+        }
     }
 }
