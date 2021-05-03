@@ -54,8 +54,8 @@ namespace EmployeDatas.Mysql
         }
         public void InserCategorie(string categorie)
         {
-            string requete = @"insert into categorie(libelle) values (@categ);";
-            string requeteId = @"select last_insert_id() from categorie;";
+            string requete = @"insert into categorie(libelle) values (@categ)";
+            string requeteId = @"select last_insert_id() from categorie";
             try
             {
                 MySqlCommand cmdMySql = new MySqlCommand(requete,this.connexionAdo);
@@ -77,38 +77,39 @@ namespace EmployeDatas.Mysql
             MySqlCommand cmdMySqlUne;
             MySqlCommand cmdMySqlDeux;
             MySqlTransaction transMySql = this.connexionAdo.BeginTransaction();
-            string requeteUne = @"insert into categorie (libelle) values (@categ);";
-            string requeteDeux = @"insert into cours (codecours, libellecours, nbjours, idcategorie) values (@codecours, @libellecours,@nbjours, @idcategfk);";
+            string requeteUne = @"insert into categorie (libelle) values (@categ)";
+            string requeteDeux = @"insert into cours (codecours, libellecours, nbjours, idcategorie) values (@codecours, @libellecours,@nbjours, @idcategfk)";
             try
             {
                 cmdMySqlUne = new MySqlCommand(requeteUne, this.connexionAdo);
                 cmdMySqlDeux = new MySqlCommand(requeteDeux, this.connexionAdo);
                 //parametre de la première requete
-                cmdMySqlUne.Parameters.AddWithValue("@categ", parametres[0]);
-                var increment = cmdMySqlUne.LastInsertedId;
+                cmdMySqlUne.Parameters.AddWithValue("categ", parametres[0]);
+                cmdMySqlUne.ExecuteNonQuery();
+                var increm = cmdMySqlUne.LastInsertedId;
 
                 //parametre de la seconde requete
-                cmdMySqlDeux.Parameters.AddWithValue("@idcategfk", increment);
+                cmdMySqlDeux.Parameters.AddWithValue("idcategfk", increm);
+                cmdMySqlDeux.Parameters.Add("codecours", MySqlDbType.VarChar);
+                cmdMySqlDeux.Parameters.Add("libellecours", MySqlDbType.VarChar);
+                cmdMySqlDeux.Parameters.Add("nbjours", MySqlDbType.Double);
+
                 for (int i = 1; i < parametres.Count; i++)
                 {
                     String[] tablo = parametres[i].Split(';');
 
-                    cmdMySqlDeux.Parameters.AddWithValue("@codecours",tablo[0]);
-                    cmdMySqlDeux.Parameters.AddWithValue("@libellecours",tablo[1]);
-                    cmdMySqlDeux.Parameters.AddWithValue("@nbjours", tablo[2]);
-                    MySqlDataReader reader = cmdMySqlDeux.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        string affichage = "cours : " + reader.GetString(0) + " libelle : " + reader.GetString(1) + " durée : " + reader.GetInt16(2) + " jours  categorie : " + reader.GetInt16(3);
-                        Console.WriteLine(affichage);
-                    }
-                    reader.Close();
+                    cmdMySqlDeux.Parameters["codecours"].Value = tablo[0];
+                    cmdMySqlDeux.Parameters["libellecours"].Value = tablo[1];
+                    cmdMySqlDeux.Parameters["nbjours"].Value = tablo[2];
+                    cmdMySqlDeux.ExecuteNonQuery();
                 }
+                Console.WriteLine("Lignes insérées");
                 transMySql.Commit();
 
             }
             catch (MySqlException ex)
             {
+                transMySql.Rollback();
                 Console.WriteLine(ex.Message);
             }
 

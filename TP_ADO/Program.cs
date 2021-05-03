@@ -11,8 +11,13 @@ namespace ClientCommande
     {
         static void Main()
         {
-            //string host = "freesio.lyc-bonaparte.fr";
-            //int port = 21521;
+            ////string host = "freesio.lyc-bonaparte.fr";
+            ////int port = 21521;
+            ////string sid = "slam";
+            ////string login = "schalckensado";
+            ////string pwd = "sio";
+            //string host = "10.10.2.10";
+            //int port = 1521;
             //string sid = "slam";
             //string login = "schalckensado";
             //string pwd = "sio";
@@ -21,7 +26,7 @@ namespace ClientCommande
             //    EmployeOracle empOracle = new EmployeOracle(host, port, sid, login, pwd);
             //    empOracle.Ouvrir();
             //    //empOracle.InsereCategorie("Système et réseau");
-            //    //empOracle.InsereCategorieV2("Système informatique");
+            //    //empOracle.InsereCategorieV2("Sécurité informatique");
             //    List<String> parametresOracle = new List<String>();
             //    parametresOracle.Add("Développement web");
             //    parametresOracle.Add("BR020;PHP fondamentaux;4");
@@ -31,7 +36,7 @@ namespace ClientCommande
 
             //    parametresOracle = new List<String>();
             //    parametresOracle.Add("Développement mobile");
-            //    parametresOracle.Add("BR060;Android fondamentauxx;4");
+            //    parametresOracle.Add("BR060;Android fondamentaux;4");
             //    parametresOracle.Add("BR060;Android avancé ;3");
             //    parametresOracle.Add("BR060;Angular JS fondamentaux ;2");
             //    empOracle.InsereCategarieCours(parametresOracle);
@@ -49,7 +54,7 @@ namespace ClientCommande
             string hostMysql = "127.0.0.1";
             int portMysql = 3306;
             string baseMysql = "dbadonet";
-            string uidMysql = "emploueado";
+            string uidMysql = "employeado";
             string pwdMysql = "employeado";
             try
             {
