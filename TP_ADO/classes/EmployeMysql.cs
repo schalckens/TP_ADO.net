@@ -17,8 +17,7 @@ namespace EmployeDatas.Mysql
             if (lieuConnexion == "IN")
             {
                 ConnectionStringSettings connex = ConfigurationManager.ConnectionStrings["connexionMySql"];
-                string co = connex.ConnectionString + "," + ConfigurationManager.AppSettings["hostServerIn"].Value;
-            }
+                string co = String.Format((connex.ConnectionString), ConfigurationManager.AppSettings["hostServerIn"], ConfigurationManager.AppSettings["hostServerIn"]);            }
             string csMysql = String.Format("Server = {0}; Port = {1}; Database = {2}; " + "Uid = {3}; " + "Pwd = {4}", host, port, db, login, pwd);
             this.connexionAdo = new MySqlConnection(csMysql);
         }
