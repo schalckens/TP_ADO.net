@@ -12,13 +12,10 @@ namespace EmployeDatas.Mysql
     {
         MySqlConnection connexionAdo;
 
-        public EmployeMysql(string lieuConnexion)
+        public EmployeMysql()
         {
-            if (lieuConnexion == "IN")
-            {
-                ConnectionStringSettings connex = ConfigurationManager.ConnectionStrings["connexionMySql"];
-                string co = String.Format((connex.ConnectionString), ConfigurationManager.AppSettings["hostServerIn"], ConfigurationManager.AppSettings["hostServerIn"]);            }
-            string csMysql = String.Format("Server = {0}; Port = {1}; Database = {2}; " + "Uid = {3}; " + "Pwd = {4}", host, port, db, login, pwd);
+            ConnectionStringSettings connex = ConfigurationManager.ConnectionStrings["connexionMySql"];
+            string csMysql = String.Format((connex.ConnectionString), ConfigurationManager.AppSettings["mysqlHost"], ConfigurationManager.AppSettings["mysqlPort"], ConfigurationManager.AppSettings["mysqlDatabase"], ConfigurationManager.AppSettings["mysqlUid"], ConfigurationManager.AppSettings["mysqlPwd"]);
             this.connexionAdo = new MySqlConnection(csMysql);
         }
         public void Ouvrir()
@@ -32,7 +29,7 @@ namespace EmployeDatas.Mysql
 
                 Console.WriteLine(ex.Message);
             }
-            
+
         }
         public void Fermer()
         {
@@ -45,7 +42,7 @@ namespace EmployeDatas.Mysql
 
                 Console.WriteLine(ex.Message);
             }
-            
+
         }
         public void InserCategorie(string categorie)
         {
@@ -53,13 +50,13 @@ namespace EmployeDatas.Mysql
             string requeteId = @"select last_insert_id() from categorie";
             try
             {
-                MySqlCommand cmdMySql = new MySqlCommand(requete,this.connexionAdo);
+                MySqlCommand cmdMySql = new MySqlCommand(requete, this.connexionAdo);
                 MySqlCommand cmdId = new MySqlCommand(requeteId, this.connexionAdo);
                 cmdMySql.Parameters.AddWithValue("categ", categorie);
                 cmdMySql.ExecuteNonQuery();
                 var increment = cmdMySql.LastInsertedId;
                 var incrementv2 = cmdId.ExecuteScalar();
-                Console.WriteLine("Il y a une catégorie inséré et son identifiant est : "+increment);
+                Console.WriteLine("Il y a une catégorie inséré et son identifiant est : " + increment);
                 Console.WriteLine("derniere id v2 : " + incrementv2);
             }
             catch (MySqlException ex)

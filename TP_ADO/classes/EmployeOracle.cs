@@ -1,6 +1,7 @@
 ﻿using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,27 +10,31 @@ namespace EmployeDatas.Oracle
 {
     class EmployeOracle
     {
-        private string host;
-        private int port;
-        private string db;
-        private string login;
-        private string pwd;
         private OracleConnection connexionAdo;
 
-        public EmployeOracle(string host, int port, string db, string login, string pwd)
-        {
-            this.host = host;
-            this.port = port;
-            this.db = db;
-            this.login = login;
-            this.pwd = pwd;
-            string cs = String.Format("Data Source= " + 
-                "(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = {0})(PORT = {1}))" +
-                "(CONNECT_DATA = (SERVICE_NAME = {2}))); User Id = {3}; Password = {4};",
-                this.host, this.port, this.db, this.login, this.pwd);
+        public EmployeOracle(String lieuConnexion)
+        { 
             try
             {
-                this.connexionAdo = new OracleConnection(cs);
+                if (lieuConnexion == "OUT")
+                {
+                    ConnectionStringSettings connex = ConfigurationManager.ConnectionStrings["connexionOracle"];
+                    string co = String.Format((connex.ConnectionString), ConfigurationManager.AppSettings["hostServerOut"], ConfigurationManager.AppSettings["portServerOut"], ConfigurationManager.AppSettings["sid"], ConfigurationManager.AppSettings["login"], ConfigurationManager.AppSettings["pwd"]);
+                    this.connexionAdo = new OracleConnection(co);
+                }
+                else
+                {
+                    try
+                    {
+                        ConnectionStringSettings connex = ConfigurationManager.ConnectionStrings["connexionOracle"];
+                        string ci = String.Format((connex.ConnectionString), ConfigurationManager.AppSettings["hostServerIn"], ConfigurationManager.AppSettings["portServerIn"], ConfigurationManager.AppSettings["sid"], ConfigurationManager.AppSettings["login"], ConfigurationManager.AppSettings["pwd"]);
+                        this.connexionAdo = new OracleConnection(ci);
+                    }
+                    catch (OracleException exi)
+                    {
+                        Console.WriteLine(exi.Message);
+                    }
+                }
             }
             catch (OracleException ex)
             {
