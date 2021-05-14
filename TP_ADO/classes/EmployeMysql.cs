@@ -11,18 +11,32 @@ namespace EmployeDatas.Mysql
     class EmployeMysql
     {
         MySqlConnection connexionAdo;
+        private static EmployeMysql instance;
 
-        public EmployeMysql()
+        private EmployeMysql()
         {
             ConnectionStringSettings connex = ConfigurationManager.ConnectionStrings["connexionMySql"];
             string csMysql = String.Format((connex.ConnectionString), ConfigurationManager.AppSettings["mysqlHost"], ConfigurationManager.AppSettings["mysqlPort"], ConfigurationManager.AppSettings["mysqlDatabase"], ConfigurationManager.AppSettings["mysqlUid"], ConfigurationManager.AppSettings["mysqlPwd"]);
             this.connexionAdo = new MySqlConnection(csMysql);
         }
+
+
+        public static EmployeMysql getInstance()
+        {
+            if (EmployeMysql.instance == null)
+            {
+                EmployeMysql.instance = new EmployeMysql();
+            }
+            return EmployeMysql.instance;
+        }
+
+
         public void Ouvrir()
         {
             try
             {
                 this.connexionAdo.Open();
+                Console.WriteLine("Connexion ouverte");
             }
             catch (MySqlException ex)
             {
@@ -36,6 +50,8 @@ namespace EmployeDatas.Mysql
             try
             {
                 this.connexionAdo.Close();
+                EmployeMysql.instance = null;
+                Console.WriteLine("Connexion fermée");
             }
             catch (MySqlException ex)
             {
