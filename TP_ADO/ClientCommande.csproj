@@ -92,6 +92,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\Categorie.cs" />
     <Compile Include="classes\Cours.cs" />
     <Compile Include="classes\Employe.cs" />
     <Compile Include="classes\EmployeOracle.cs" />

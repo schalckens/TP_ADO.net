@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TP_ADO.classes;
 
 namespace EmployeDatas.Mysql
 {
@@ -53,67 +54,54 @@ namespace EmployeDatas.Mysql
             }
 
         }
-        public void InserCategorie(string categorie)
+        public void ListeCours()
         {
-            string requete = @"insert into categorie(libelle) values (@categ)";
-            string requeteId = @"select last_insert_id() from categorie";
+            string requete = @"select * from cours";
+            List<Cours> cours = new List<Cours>();
+            try
+            {
+                
+                Categorie laCategorie;
+                MySqlCommand cmdMySql = new MySqlCommand(requete, this.connexionAdo);
+                MySqlDataReader reader = cmdMySql.ExecuteReader();
+                while (reader.Read())
+                {
+                    laCategorie = new Categorie(reader.GetInt32(3));
+                    Cours cour = new Cours(reader.GetString(0), reader.GetString(1),reader.GetInt32(2),laCategorie);
+                    cours.Add(cour);
+                }
+
+                foreach(Cours cour in cours)
+                {
+                    Console.WriteLine(cour);
+                }
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            
+        }
+        public void ListeCours(string codeCours)
+        {
+            string requete = @"select * from cours where codecours = @codeCours ";
             try
             {
                 MySqlCommand cmdMySql = new MySqlCommand(requete, this.connexionAdo);
-                MySqlCommand cmdId = new MySqlCommand(requeteId, this.connexionAdo);
-                cmdMySql.Parameters.AddWithValue("categ", categorie);
-                cmdMySql.ExecuteNonQuery();
-                var increment = cmdMySql.LastInsertedId;
-                var incrementv2 = cmdId.ExecuteScalar();
-                Console.WriteLine("Il y a une catégorie inséré et son identifiant est : " + increment);
-                Console.WriteLine("derniere id v2 : " + incrementv2);
-            }
-            catch (MySqlException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-        public void InsereCategarieCours(List<String> parametres)
-        {
-            MySqlCommand cmdMySqlUne;
-            MySqlCommand cmdMySqlDeux;
-            MySqlTransaction transMySql = this.connexionAdo.BeginTransaction();
-            string requeteUne = @"insert into categorie (libelle) values (@categ)";
-            string requeteDeux = @"insert into cours (codecours, libellecours, nbjours, idcategorie) values (@codecours, @libellecours,@nbjours, @idcategfk)";
-            try
-            {
-                cmdMySqlUne = new MySqlCommand(requeteUne, this.connexionAdo);
-                cmdMySqlDeux = new MySqlCommand(requeteDeux, this.connexionAdo);
-                //parametre de la première requete
-                cmdMySqlUne.Parameters.AddWithValue("categ", parametres[0]);
-                cmdMySqlUne.ExecuteNonQuery();
-                var increm = cmdMySqlUne.LastInsertedId;
-
-                //parametre de la seconde requete
-                cmdMySqlDeux.Parameters.AddWithValue("idcategfk", increm);
-                cmdMySqlDeux.Parameters.Add("codecours", MySqlDbType.VarChar);
-                cmdMySqlDeux.Parameters.Add("libellecours", MySqlDbType.VarChar);
-                cmdMySqlDeux.Parameters.Add("nbjours", MySqlDbType.Double);
-
-                for (int i = 1; i < parametres.Count; i++)
+                cmdMySql.Parameters.AddWithValue("@codeCours", codeCours);
+                MySqlDataReader reader = cmdMySql.ExecuteReader();
+                while (reader.Read())
                 {
-                    String[] tablo = parametres[i].Split(';');
-
-                    cmdMySqlDeux.Parameters["codecours"].Value = tablo[0];
-                    cmdMySqlDeux.Parameters["libellecours"].Value = tablo[1];
-                    cmdMySqlDeux.Parameters["nbjours"].Value = tablo[2];
-                    cmdMySqlDeux.ExecuteNonQuery();
+                    Categorie laCategorie = new Categorie(reader.GetInt32(3));
+                    Cours cour = new Cours(reader.GetString(0), reader.GetString(1), reader.GetInt32(2), laCategorie);
+                    Console.WriteLine(cour);
                 }
-                Console.WriteLine("Lignes insérées");
-                transMySql.Commit();
-
+                
             }
             catch (MySqlException ex)
             {
-                transMySql.Rollback();
                 Console.WriteLine(ex.Message);
             }
-
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ using MySql.Data.MySqlClient;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
+using TP_ADO.classes;
 
 namespace ClientCommande
 {
@@ -12,27 +13,30 @@ namespace ClientCommande
         static void Main()
         {
 
-            try
-            {
-                EmployeOracle empOracle = EmployeOracle.getInstance("IN");
-                empOracle.Ouvrir();
-                empOracle.Fermer();
-                Console.WriteLine("--- Fin normal du Program ---");
-            }
+            //try
+            //{
+            //    EmployeOracle empOracle = EmployeOracle.getInstance("IN");
+            //    empOracle.Ouvrir();
+            //    empOracle.Fermer();
+            //    Console.WriteLine("--- Fin normal du Program ---");
+            //}
 
-            catch (OracleException ex)
-            {
+            //catch (OracleException ex)
+            //{
 
-                Console.WriteLine("Erreur Oracle " + ex.Message);
-            }
+            //    Console.WriteLine("Erreur Oracle " + ex.Message);
+            //}
 
 
             try
             {
                 EmployeMysql cnMysql = EmployeMysql.getInstance();
                 cnMysql.Ouvrir();
-                cnMysql.Fermer();
 
+                //cnMysql.ListeCours();
+                cnMysql.ListeCours("BR035");
+
+                cnMysql.Fermer();
                 Console.WriteLine("--- Fin normal du Program ---");
             }
             catch (MySqlException ex)
