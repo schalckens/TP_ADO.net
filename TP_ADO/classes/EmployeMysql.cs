@@ -10,9 +10,12 @@ namespace EmployeDatas.Mysql
 {
     class EmployeMysql
     {
-        MySqlConnection connexionAdo;
-        private static EmployeMysql instance;
+        MySqlConnection connexionAdo; // l'objet connexion de la base de données
+        private static EmployeMysql instance; // l'instance de sa prope classe
 
+        /// <summary>
+        /// Constructeur de la classe EmployeMysql
+        /// </summary>
         private EmployeMysql()
         {
             ConnectionStringSettings connex = ConfigurationManager.ConnectionStrings["connexionMySql"];
@@ -21,22 +24,12 @@ namespace EmployeDatas.Mysql
         }
 
 
-        public static EmployeMysql getInstance()
-        {
-            if (EmployeMysql.instance == null)
-            {
-                EmployeMysql.instance = new EmployeMysql();
-            }
-            return EmployeMysql.instance;
-        }
-
-
         public void Ouvrir()
         {
             try
             {
                 this.connexionAdo.Open();
-                Console.WriteLine("Connexion ouverte");
+                Console.WriteLine("Connexion MySql ouverte");
             }
             catch (MySqlException ex)
             {
@@ -51,7 +44,7 @@ namespace EmployeDatas.Mysql
             {
                 this.connexionAdo.Close();
                 EmployeMysql.instance = null;
-                Console.WriteLine("Connexion fermée");
+                Console.WriteLine("Connexion MySql fermée");
             }
             catch (MySqlException ex)
             {
@@ -121,6 +114,21 @@ namespace EmployeDatas.Mysql
                 Console.WriteLine(ex.Message);
             }
 
+        }
+
+        /// <summary>
+        /// Accesseur à la propre instance de la classe
+        /// En mode static pour ne pas avoir à instancier la classe ......
+        /// Du coup l'attribut instance sera en static
+        /// </summary>
+        /// <returns></returns>
+        public static EmployeMysql getInstance()
+        {
+            if (EmployeMysql.instance == null)
+            {
+                EmployeMysql.instance = new EmployeMysql();
+            }
+            return EmployeMysql.instance;
         }
     }
 }

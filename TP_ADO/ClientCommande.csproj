@@ -92,8 +92,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\Cours.cs" />
+    <Compile Include="classes\Employe.cs" />
     <Compile Include="classes\EmployeOracle.cs" />
     <Compile Include="classes\EmployeMysql.cs" />
+    <Compile Include="classes\Inscrit.cs" />
+    <Compile Include="classes\Participer.cs" />
+    <Compile Include="classes\Projet.cs" />
+    <Compile Include="classes\Seminaire.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -11,8 +11,9 @@ namespace EmployeDatas.Oracle
     class EmployeOracle
     {
         private OracleConnection connexionAdo;
+        private static EmployeOracle instance;
 
-        public EmployeOracle(String lieuConnexion)
+        private EmployeOracle(String lieuConnexion)
         { 
             try
             {
@@ -30,9 +31,9 @@ namespace EmployeDatas.Oracle
                         string ci = String.Format((connex.ConnectionString), ConfigurationManager.AppSettings["hostServerIn"], ConfigurationManager.AppSettings["portServerIn"], ConfigurationManager.AppSettings["sid"], ConfigurationManager.AppSettings["login"], ConfigurationManager.AppSettings["pwd"]);
                         this.connexionAdo = new OracleConnection(ci);
                     }
-                    catch (OracleException exi)
+                    catch (OracleException ex)
                     {
-                        Console.WriteLine(exi.Message);
+                        Console.WriteLine(ex.Message);
                     }
                 }
             }
@@ -47,6 +48,7 @@ namespace EmployeDatas.Oracle
             try
             {
                 connexionAdo.Open();
+                Console.WriteLine("Connexion Oracle ouverte");
             }
             catch (OracleException ex)
             {
@@ -60,6 +62,7 @@ namespace EmployeDatas.Oracle
             try
             {
                 connexionAdo.Close();
+                Console.WriteLine("Connexion Oracle fermée");
             }
             catch (OracleException ex)
             {
@@ -151,6 +154,16 @@ namespace EmployeDatas.Oracle
                 Console.WriteLine(ex.Message);
             }
             
+        }
+
+        public static EmployeOracle getInstance(string lieuConnexion)
+        {
+            if (EmployeOracle.instance == null)
+            {
+                EmployeOracle.instance = new EmployeOracle(lieuConnexion);
+                
+            }
+            return EmployeOracle.instance;
         }
 
     }
