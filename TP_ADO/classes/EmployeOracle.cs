@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TP_ADO.classes;
 
 namespace EmployeDatas.Oracle
 {
@@ -71,89 +72,55 @@ namespace EmployeDatas.Oracle
             }
         }
 
-        public void InsereCategorie(string pCategorie)
+        public void ListeCours()
         {
-            string requete = "insert into categorie (id,libelle) values (seq_categorie.nextval,:nomCategorie)";
-           string requeteId = "select seq_categorie.currval from dual";
+            string requete = @"select * from cours";
+            List<Cours> cours = new List<Cours>();
             try
             {
+
+                Categorie laCategorie;
                 OracleCommand cmdOracle = new OracleCommand(requete, this.connexionAdo);
-                OracleCommand cmdId = new OracleCommand(requeteId, this.connexionAdo);
-                cmdOracle.Parameters.Add(new OracleParameter("nomCategorie", OracleDbType.Varchar2, System.Data.ParameterDirection.Input));
-                cmdOracle.Parameters["nomCategorie"].Value = pCategorie;
-                cmdOracle.ExecuteNonQuery();
-                var id = cmdId.ExecuteScalar();
-                Console.WriteLine("Une ligne a été insérée dans catégorie et son Id est : " + id);
-            }
-            catch (OracleException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-        public void InsereCategorieV2(string pCategorie)
-        {
-            string requete = "insert into categorie(id,libelle) values (seq_categorie.nextval ,:nomCategorie) returning id into :newId ";
-            try
-            {
-                OracleCommand cmdOracle = new OracleCommand(requete, this.connexionAdo);
-                cmdOracle.Parameters.Add(new OracleParameter("nomCategorie", OracleDbType.Varchar2, System.Data.ParameterDirection.Input));
-                cmdOracle.Parameters["nomCategorie"].Value = pCategorie;
-                cmdOracle.Parameters.Add(new OracleParameter("newId", OracleDbType.Int16, System.Data.ParameterDirection.Output));
-                cmdOracle.ExecuteNonQuery();
-                var increm = cmdOracle.Parameters["newId"].Value;
-                
-                Console.WriteLine("Une ligne a été insérée dans catégorie et son Id est : " + increm);
-            }
-            catch (OracleException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-
-        public void InsereCategarieCours(List<String> parametres)
-        {
-            OracleCommand cmdOracleUne;
-            OracleCommand cmdOracleDeux;
-            OracleTransaction transOracle = this.connexionAdo.BeginTransaction();
-            string requeteUne = @"insert into categorie (id, libelle) values (seq_categorie.nextval , :categ) returning id into :idcateg";
-            string requeteDeux = @"insert into cours (codecours, libellecours, nbjours, idcategorie) values (:pCodecours, :pLibelleCours,:pNbJours, :idcategfk)";
-            try
-            {
-                cmdOracleUne = new OracleCommand(requeteUne, this.connexionAdo);
-                cmdOracleDeux = new OracleCommand(requeteDeux, this.connexionAdo);
-                //parametre de la première requete
-                cmdOracleUne.Parameters.Add(new OracleParameter("categ", OracleDbType.Varchar2, System.Data.ParameterDirection.Input));
-                cmdOracleUne.Parameters.Add(new OracleParameter("idcateg", OracleDbType.Int16, System.Data.ParameterDirection.Output));
-                cmdOracleUne.Parameters["categ"].Value = parametres[0];
-                cmdOracleUne.ExecuteNonQuery();
-                var idcateg = cmdOracleUne.Parameters["idcateg"].Value;
-
-                //parametre de la seconde requete
-                cmdOracleDeux.Parameters.Add(new OracleParameter("pCodecours", OracleDbType.Varchar2, System.Data.ParameterDirection.Input));
-                cmdOracleDeux.Parameters.Add(new OracleParameter("pLibelleCours", OracleDbType.Varchar2, System.Data.ParameterDirection.Input));
-                cmdOracleDeux.Parameters.Add(new OracleParameter("pNbJours", OracleDbType.Int16, System.Data.ParameterDirection.Input));
-                cmdOracleDeux.Parameters.Add(new OracleParameter("idcategfk", OracleDbType.Int16, System.Data.ParameterDirection.Input));
-                cmdOracleDeux.Parameters["idcategfk"].Value = idcateg;
-
-                for (int i = 1; i < parametres.Count; i++)
+                OracleDataReader reader = cmdOracle.ExecuteReader();
+                while (reader.Read())
                 {
-                    String[] tablo = parametres[i].Split(';');
-                    cmdOracleDeux.Parameters["pCodecours"].Value = tablo[0];
-                    cmdOracleDeux.Parameters["pLibelleCours"].Value = tablo[1];
-                    cmdOracleDeux.Parameters["pNbJours"].Value = tablo[2];
-                    cmdOracleDeux.ExecuteNonQuery();
+                    laCategorie = new Categorie(reader.GetInt32(3));
+                    Cours cour = new Cours(reader.GetString(0), reader.GetString(1), reader.GetInt32(2), laCategorie);
+                    cours.Add(cour);
                 }
-                Console.WriteLine("Lignes insérées");
-                transOracle.Commit();
-                
-                
+
+                foreach (Cours cour in cours)
+                {
+                    Console.WriteLine(cour);
+                }
             }
             catch (OracleException ex)
             {
-                transOracle.Rollback();
                 Console.WriteLine(ex.Message);
             }
-            
+
+        }
+        public void ListeCours(string codeCours)
+        {
+            string requete = @"select * from cours where codecours = :codeCours ";
+            try
+            {
+                OracleCommand cmdOracle = new OracleCommand(requete, this.connexionAdo);
+                cmdOracle.Parameters.Add(new OracleParameter("codeCours", OracleDbType.Varchar2));
+                cmdOracle.Parameters["codeCours"].Value = codeCours;
+                OracleDataReader reader = cmdOracle.ExecuteReader();
+                while (reader.Read())
+                {
+                    Categorie laCategorie = new Categorie(reader.GetInt32(3));
+                    Cours cour = new Cours(reader.GetString(0), reader.GetString(1), reader.GetInt32(2), laCategorie);
+                    Console.WriteLine(cour);
+                }
+
+            }
+            catch (OracleException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public static EmployeOracle getInstance(string lieuConnexion)
