@@ -104,21 +104,12 @@ namespace EmployeDatas.Mysql
             }
         }
 
-        public void ListeCoursV2(string codeCours)
+        public void ListeCoursV2(Cours tableMySql)
         {
-            string requete = @"select * from cours where codecours = @codeCours ";
+            
             try
             {
-                MySqlCommand cmdMySql = new MySqlCommand(requete, this.connexionAdo);
-                cmdMySql.Parameters.AddWithValue("@codeCours", codeCours);
-                MySqlDataReader reader = cmdMySql.ExecuteReader();
-                while (reader.Read())
-                {
-                    Categorie laCategorie = new Categorie(reader.GetInt32(3));
-                    Cours cour = new Cours(reader.GetString(0), reader.GetString(1), reader.GetInt32(2), laCategorie);
-                    Console.WriteLine(cour);
-                }
-
+               
             }
             catch (MySqlException ex)
             {
