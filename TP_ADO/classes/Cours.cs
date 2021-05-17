@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace TP_ADO.classes
 {
-    class Cours
+    class Cours : DataTable
     {
         private string codeCours;
         private string libelleCours;
         private int nbJours;
         private Categorie laCategorie;
+
+        public Cours() { }
 
         public Cours(string codeCours, string libelleCours, int nbJours, Categorie laCategorie)
         {

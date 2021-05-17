@@ -132,6 +132,8 @@ namespace EmployeDatas.Oracle
             }
             return EmployeOracle.instance;
         }
+        //https://docs.microsoft.com/fr-fr/dotnet/api/system.data.datarowcollection.find?view=net-5.0
+        //https://docs.microsoft.com/fr-fr/dotnet/api/system.data.datatable?view=net-5.0
 
     }
 }

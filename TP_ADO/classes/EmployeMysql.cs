@@ -54,7 +54,7 @@ namespace EmployeDatas.Mysql
             }
 
         }
-        public void ListeCours()
+        public void ListeCoursV1()
         {
             string requete = @"select * from cours";
             List<Cours> cours = new List<Cours>();
@@ -82,7 +82,7 @@ namespace EmployeDatas.Mysql
             }
             
         }
-        public void ListeCours(string codeCours)
+        public void ListeCoursV1(string codeCours)
         {
             string requete = @"select * from cours where codecours = @codeCours ";
             try
@@ -97,6 +97,28 @@ namespace EmployeDatas.Mysql
                     Console.WriteLine(cour);
                 }
                 
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public void ListeCoursV2(string codeCours)
+        {
+            string requete = @"select * from cours where codecours = @codeCours ";
+            try
+            {
+                MySqlCommand cmdMySql = new MySqlCommand(requete, this.connexionAdo);
+                cmdMySql.Parameters.AddWithValue("@codeCours", codeCours);
+                MySqlDataReader reader = cmdMySql.ExecuteReader();
+                while (reader.Read())
+                {
+                    Categorie laCategorie = new Categorie(reader.GetInt32(3));
+                    Cours cour = new Cours(reader.GetString(0), reader.GetString(1), reader.GetInt32(2), laCategorie);
+                    Console.WriteLine(cour);
+                }
+
             }
             catch (MySqlException ex)
             {

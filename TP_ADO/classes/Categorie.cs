@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace TP_ADO.classes
 {
-    class Categorie
+    class Categorie : DataTable
     {
         private int idCategorie;
         private string libelleCategorie = null;
